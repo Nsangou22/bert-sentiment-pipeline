@@ -26,10 +26,8 @@ jobs:
         pip install -r requirement.txt
 
     - name: Run Evaluation
-      env:
-        PYTHONPATH: .
       run: |
-        python src/evaluate.py
+        python -m src.evaluate
 
     - name: Upload Metrics
       uses: actions/upload-artifact@v4
