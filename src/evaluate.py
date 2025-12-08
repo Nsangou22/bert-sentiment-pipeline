@@ -9,6 +9,12 @@ def evaluate():
     # Load data (simulated for this pipeline based on existing file)
     try:
         df = pd.read_csv("data/dataset.csv")
+        # Map columns to expected format
+        if "content" in df.columns and "text" not in df.columns:
+            df["text"] = df["content"]
+        if "score" in df.columns and "label" not in df.columns:
+            # Assume score > 3 is Positive, else Negative
+            df["label"] = df["score"].apply(lambda x: "Positive" if x > 3 else "Negative")
     except FileNotFoundError:
         print("Dataset not found. Creating dummy data for evaluation.")
         data = {
