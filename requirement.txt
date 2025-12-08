@@ -4,3 +4,6 @@ pandas
 scikit-learn
 pytest
 pytest-cov
+fastapi
+uvicorn
+psycopg2-binary
