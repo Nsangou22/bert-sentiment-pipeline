@@ -61,7 +61,51 @@ This represents the final stage of the pipeline.
 Every push or pull request triggers the CI job to:
 1. Install dependencies  
 2. Run pytest  
-3. Display “ All checks passed” before merging  
+3. Display “ All checks passed” before merging 
+
+---
+
+## 🐳 Docker & Deployment
+
+The project is containerized using Docker and Docker Compose.
+
+### **Dockerfile**
+- **Base Image:** `python:3.9-slim`
+- **Entrypoint:** Runs the FastAPI application (`src/app.py`).
+
+### **Docker Compose**
+Orchestrates the application services:
+- **`api`**: The FastAPI service running on port `8000`.
+    - Persists data via `./data` volume.
+    - Persists models via `./models` volume.
+- **`db`**: A PostgreSQL database (port `5432`) for logging predictions.
+
+### **Running with Docker**
+```bash
+docker-compose up --build
+```
+
+---
+
+## 🚀 CI/CD Pipeline (GitHub Actions)
+
+We have automated the testing, evaluation, and deployment processes using three workflows:
+
+### **1. Test (`test.yml`)**
+- Triggers on `push` and `pull_request`.
+- Runs **Flake8** linting.
+- Executes **Pytest** unit tests.
+
+### **2. Evaluate (`evaluate.yml`)**
+- Triggers after specific tests complete successfully.
+- Runs `src/evaluate.py` to calculate Accuracy and F1 Score.
+- Fails if model accuracy is below threshold (< 0.5).
+- Uploads performance metrics as artifacts (`metrics.json`).
+
+### **3. Build & Publish (`build.yml`)**
+- Triggers on push to `main`.
+- Builds the Docker image.
+- Pushes to Docker Hub (`nsangou22/bert-sentiment-app`). 
 
 ---
 
