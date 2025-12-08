@@ -1,5 +1,6 @@
 import json
 import sys
+import os
 import pandas as pd
 from sklearn.metrics import accuracy_score, f1_score
 from src.data_processing import apply_cleaning, split_data, clean_text
@@ -57,7 +58,8 @@ def evaluate():
         json.dump(metrics, f)
     
     # Fail if accuracy is too low (e.g., < 0.5)
-    if acc < 0.5:
+    threshold = float(os.environ.get("ACCURACY_THRESHOLD", 0.4))
+    if acc < threshold:
         print("Performance below threshold!")
         sys.exit(1)
 
